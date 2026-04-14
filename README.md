@@ -5,8 +5,8 @@
 Executive dashboard that simulates how I run multi-business operations — KPIs, incident detection,
 and an automated recommendations engine that turns metrics into actions.
 
-**Live demo:** _(Vercel URL coming)_
-**Resume:** [/resume](./app/resume/page.tsx) on the live site · [PDF](./public/resume.pdf)
+**Live demo:** **[operations-command-center.vercel.app](https://operations-command-center.vercel.app)**
+**Resume:** [operations-command-center.vercel.app/resume](https://operations-command-center.vercel.app/resume) · [PDF](./public/resume.pdf)
 
 ---
 

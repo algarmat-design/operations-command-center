@@ -30,6 +30,16 @@ export function Footer() {
             </a>
           </li>
           <li>
+            <a
+              href="https://github.com/algarmat-design/operations-command-center"
+              className="hover:text-white"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </li>
+          <li>
             <a href="/resume.pdf" className="hover:text-white" target="_blank" rel="noreferrer">
               Resume PDF
             </a>
