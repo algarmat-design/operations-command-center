@@ -9,7 +9,7 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "sw
 const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://operations-command-center.vercel.app"),
+  metadataBase: new URL("https://alvarogarcia.space"),
   title: "Operations Command Center · Álvaro García",
   description:
     "A portfolio project by Álvaro García — Senior IT Director. Executive dashboard that simulates running multi-business operations with KPIs, incident detection and automated recommendations.",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     description:
       "Portfolio project — executive dashboard with KPIs, incident detection, and an automated recommendations engine.",
     type: "website",
-    url: "https://operations-command-center.vercel.app",
+    url: "https://alvarogarcia.space",
   },
 };
 
