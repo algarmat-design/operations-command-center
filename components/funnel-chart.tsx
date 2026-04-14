@@ -3,7 +3,7 @@ import type { FunnelStep } from "@/lib/types";
 export function FunnelChart({ steps }: { steps: FunnelStep[] }) {
   const max = Math.max(...steps.map((s) => s.count));
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {steps.map((s, i) => {
         const pct = (s.count / max) * 100;
         const conv = i === 0 ? 100 : (s.count / steps[i - 1].count) * 100;
@@ -21,6 +21,7 @@ export function FunnelChart({ steps }: { steps: FunnelStep[] }) {
                 style={{ width: `${pct}%` }}
               />
             </div>
+            {s.note && <p className="mt-1 text-[11px] text-slate-500">{s.note}</p>}
           </div>
         );
       })}

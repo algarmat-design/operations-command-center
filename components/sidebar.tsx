@@ -39,7 +39,8 @@ export function Sidebar() {
         </ol>
 
         <p className="mt-5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-[11px] leading-relaxed text-emerald-200/90">
-          A director is not paid to read charts — is paid to decide. This dashboard is built to make the decision obvious.
+          Leadership is measured by the quality, speed and accountability of its decisions. This dashboard is designed
+          to give executives the clarity and context required to act with confidence.
         </p>
       </div>
 

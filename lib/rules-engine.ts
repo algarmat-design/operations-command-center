@@ -9,22 +9,156 @@ export function generateInsights(data: OperationalData): Insights {
   const sla = kpi("sla");
   const rev = kpi("revenue");
   const inc = kpi("incidents");
-  const prod = kpi("productivity");
+  const mttr = kpi("mttr");
   const ret = kpi("retention");
+  const ops = data.itOps;
+
+  // --- IT Operations / ITIL-driven alerts ---
+
+  if (ops.p1 > 0) {
+    alerts.push({
+      id: "p1-active",
+      title: `P1 incident active — ${ops.p1} open`,
+      detail: "Major Incident Management procedure required. Executive communications cadence every 30 minutes per ITIL playbook.",
+      severity: "critical",
+      source: "Incident Management",
+      createdMinutesAgo: 12,
+    });
+    recommendations.push({
+      id: "rec-p1",
+      action: "Declare Major Incident — single Incident Commander, merge war rooms",
+      rationale: "Correlated P1/P2s fragment the response. A single IC unifies decisions and removes duplicated effort.",
+      impact: "Cut MTTR ~40% on correlated incidents; clear exec comms line",
+      effort: "low",
+      priority: "high",
+      owner: "Incident Commander / IT Ops Lead",
+    });
+  }
+
+  if (inc && inc.rawValue >= 8) {
+    alerts.push({
+      id: "incidents-high",
+      title: `${inc.rawValue} active incidents — ${(inc.rawValue / 5).toFixed(1)}× threshold`,
+      detail: "Backlog suggests a common upstream cause (infrastructure, recent change, or vendor). Problem Management should open a record.",
+      severity: "critical",
+      source: "ITIL · Incident Mgmt",
+      createdMinutesAgo: 8,
+    });
+    recommendations.push({
+      id: "rec-problem",
+      action: "Open a Problem record and assign a Problem Manager",
+      rationale: "Repeated incidents with similar symptoms point to a root cause that Incident Mgmt alone cannot fix.",
+      impact: "Stops recurrence; removes 25–40% of future ticket volume",
+      effort: "medium",
+      priority: "high",
+      owner: "Problem Manager",
+    });
+  }
+
+  if (ops.failedChanges > 0) {
+    alerts.push({
+      id: "failed-changes",
+      title: `${ops.failedChanges} failed change${ops.failedChanges > 1 ? "s" : ""} this week`,
+      detail: "Change Advisory Board review recommended. Check CAB pre-approval quality and rollback rehearsal completeness.",
+      severity: "warning",
+      source: "Change Management",
+      createdMinutesAgo: 180,
+    });
+    recommendations.push({
+      id: "rec-cab",
+      action: "Tighten CAB gate: mandatory rollback test + peer review on all normal changes",
+      rationale: "Failed changes are preventable; most trace back to untested rollback paths.",
+      impact: "Reduce change failure rate below 2% (DORA benchmark: elite)",
+      effort: "low",
+      priority: "medium",
+      owner: "Change Manager",
+    });
+  }
+
+  if (sla && sla.rawValue < 90) {
+    alerts.push({
+      id: "sla-breach",
+      title: `Service Desk SLA breached — ${sla.rawValue.toFixed(1)}% vs 95% target`,
+      detail: "Tier-1 response times slipping. Ticket volume vs. staffed capacity is out of balance.",
+      severity: sla.rawValue < 85 ? "critical" : "warning",
+      source: "Service Desk",
+      createdMinutesAgo: 30,
+    });
+    recommendations.push({
+      id: "rec-sla",
+      action: "Reallocate 2 Tier-3 agents to Tier-1 for 48h; spin up overflow queue",
+      rationale: "Tier-3 capacity has slack; Tier-1 is the bottleneck driving the breach.",
+      impact: "Restore SLA within 24h, protect CSAT",
+      effort: "low",
+      priority: "high",
+      owner: "Service Desk Manager",
+    });
+    recommendations.push({
+      id: "rec-selfservice",
+      action: "Publish top-5 knowledge articles covering 60% of current ticket drivers",
+      rationale: "High-volume ticket drivers are repeatable and deflectable with proper self-service.",
+      impact: "20–30% ticket deflection within 2 weeks, compounding",
+      effort: "medium",
+      priority: "medium",
+      owner: "Knowledge Manager",
+    });
+  }
+
+  if (mttr && mttr.rawValue > 240) {
+    alerts.push({
+      id: "mttr-high",
+      title: `MTTR elevated — ${(mttr.rawValue / 60).toFixed(1)}h vs 3h target`,
+      detail: "Investigate runbook coverage and on-call escalation paths.",
+      severity: "warning",
+      source: "ITIL · Incident Mgmt",
+      createdMinutesAgo: 60,
+    });
+    recommendations.push({
+      id: "rec-runbooks",
+      action: "Run a runbook audit on top-10 recurring incident categories",
+      rationale: "Missing or outdated runbooks force engineers to rediscover the fix each time.",
+      impact: "~35% MTTR reduction on repeated categories",
+      effort: "medium",
+      priority: "medium",
+      owner: "SRE / On-call Lead",
+    });
+  }
+
+  if (ops.ticketDeltaPct > 50) {
+    alerts.push({
+      id: "ticket-surge",
+      title: `Ticket volume up ${ops.ticketDeltaPct.toFixed(0)}% — possible incident precursor`,
+      detail: "Request/Incident spike that has not yet tripped the SLA alarm. Early warning signal.",
+      severity: "warning",
+      source: "Service Desk",
+      createdMinutesAgo: 45,
+    });
+    recommendations.push({
+      id: "rec-swarm",
+      action: "Swarm review on top-5 ticket categories today — are they symptoms of one root cause?",
+      rationale: "Volume spikes without severity often mean an underlying issue users are routing around.",
+      impact: "Catch a P2 before it becomes a P1",
+      effort: "low",
+      priority: "medium",
+      owner: "IT Ops / Problem Manager",
+    });
+  }
+
+  // --- Commercial / Funnel alerts ---
 
   if (conv && conv.deltaPct <= -15) {
     alerts.push({
       id: "conv-drop",
       title: `Conversion dropped ${Math.abs(conv.deltaPct).toFixed(1)}% vs prior period`,
-      detail: "Highest abandonment recorded at funnel step 3 (Proposal → Closed Won).",
+      detail: "Step-3 (Proposal → Closed-Won) is the primary leak point.",
       severity: "critical",
       source: "Funnel analytics",
       createdMinutesAgo: 42,
     });
     recommendations.push({
       id: "rec-conv",
-      action: "Run a same-day diagnostic on funnel step 3",
-      rationale: "Abandonment jumped at proposal stage — likely pricing, contract, or legal friction.",
+      action: "Same-day diagnostic on proposal-stage objections (pricing, legal, scope)",
+      rationale: "Abandonment spiked at the commercial hand-off — often a contract or pricing friction, not product fit.",
       impact: "Recover ~20% of lost conversions within 2 weeks",
       effort: "medium",
       priority: "high",
@@ -32,31 +166,11 @@ export function generateInsights(data: OperationalData): Insights {
     });
   }
 
-  if (sla && sla.rawValue > 120 * 1.25) {
-    alerts.push({
-      id: "sla-breach",
-      title: `Support SLA breached — current ${formatMinutes(sla.rawValue)} vs target 2h`,
-      detail: "Tier 1 queue backlog increased after last deploy.",
-      severity: sla.rawValue > 180 ? "critical" : "warning",
-      source: "Service desk",
-      createdMinutesAgo: 18,
-    });
-    recommendations.push({
-      id: "rec-sla",
-      action: "Reallocate 2 agents from Tier 3 to Tier 1 queue for 48h",
-      rationale: "Tier 3 volume is within SLA with slack; Tier 1 is the bottleneck.",
-      impact: "Restore SLA within 24h, prevent retention loss",
-      effort: "low",
-      priority: "high",
-      owner: "Support Lead",
-    });
-  }
-
   if (rev && rev.deltaPct <= -10) {
     alerts.push({
       id: "rev-decline",
       title: `Revenue down ${Math.abs(rev.deltaPct).toFixed(1)}% MoM`,
-      detail: "Consulting pipeline stalled; hospitality and imports cannot offset the gap.",
+      detail: "Review campaign ROI and re-activate highest-CAC-efficient channel.",
       severity: "critical",
       source: "Finance",
       createdMinutesAgo: 120,
@@ -72,74 +186,35 @@ export function generateInsights(data: OperationalData): Insights {
     });
   }
 
-  if (inc && inc.rawValue >= 8) {
-    alerts.push({
-      id: "incidents-high",
-      title: `${inc.rawValue} active incidents — 2.2× threshold`,
-      detail: "Payment gateway P1 + 3 downstream dependencies.",
-      severity: "critical",
-      source: "Incident mgmt",
-      createdMinutesAgo: 8,
-    });
-    recommendations.push({
-      id: "rec-inc",
-      action: "Declare major-incident posture: merge war rooms, single IC",
-      rationale: "Dependent incidents need unified command to avoid duplicated work.",
-      impact: "Cut MTTR by ~40% on correlated incidents",
-      effort: "low",
-      priority: "high",
-      owner: "Incident Commander",
-    });
-  }
-
   if (data.churn.accountsAtRisk >= 10) {
     alerts.push({
       id: "churn-risk",
       title: `${data.churn.accountsAtRisk} accounts flagged churn-risk`,
-      detail: `$${(data.churn.estimatedMrrAtRisk / 1000).toFixed(1)}K MRR at risk; ${
-        data.churn.inactiveOver30Days
-      } inactive >30d.`,
+      detail: `$${(data.churn.estimatedMrrAtRisk / 1000).toFixed(1)}K MRR at risk; ${data.churn.inactiveOver30Days} inactive >30 days.`,
       severity: "warning",
       source: "CSM platform",
       createdMinutesAgo: 60,
     });
     recommendations.push({
       id: "rec-churn",
-      action: "Launch white-glove retention play on top-10 at-risk accounts",
-      rationale: "CSM capacity is available; direct exec outreach converts at ~55%.",
-      impact: `Defend ~$${Math.round(data.churn.estimatedMrrAtRisk * 0.55 / 1000)}K MRR`,
+      action: "White-glove retention play on top-10 at-risk accounts",
+      rationale: "Exec outreach to at-risk accounts converts at ~55% when triggered early.",
+      impact: `Defend ~$${Math.round(
+        (data.churn.estimatedMrrAtRisk * 0.55) / 1000,
+      )}K MRR`,
       effort: "medium",
       priority: "high",
       owner: "Head of Customer Success",
     });
   }
 
-  if (prod && prod.rawValue < 80) {
-    alerts.push({
-      id: "prod-drop",
-      title: `Team productivity below target (${prod.rawValue})`,
-      detail: "Context-switching and incident drain are depressing throughput.",
-      severity: "warning",
-      source: "Delivery analytics",
-      createdMinutesAgo: 240,
-    });
-    recommendations.push({
-      id: "rec-prod",
-      action: "Freeze non-critical roadmap for 2 sprints; focus on stability",
-      rationale: "Sustaining-mode focus restores throughput faster than adding headcount.",
-      impact: "Return to >85 index in 3–4 weeks",
-      effort: "low",
-      priority: "medium",
-      owner: "Engineering Directors",
-    });
-  }
+  // --- Growth-phase pre-emptive signals ---
 
-  // Growth-phase signal: everything looks healthy but SLA is drifting
-  if (sla && sla.rawValue > 120 && sla.rawValue < 180 && rev && rev.deltaPct > 20) {
+  if (sla && sla.rawValue > 90 && sla.rawValue < 95 && rev && rev.deltaPct > 20) {
     recommendations.push({
       id: "rec-scale",
-      action: "Approve +3 Tier 1 agents and +1 delivery lead this cycle",
-      rationale: "Revenue growth is outpacing support/delivery capacity — pre-empt breach.",
+      action: "Approve +3 Tier-1 agents and +1 delivery lead this cycle",
+      rationale: "Revenue growth is outpacing support capacity — pre-empt a breach before CSAT drops.",
       impact: "Avoid a 2-month capacity trough and protect NPS",
       effort: "medium",
       priority: "medium",
@@ -150,21 +225,22 @@ export function generateInsights(data: OperationalData): Insights {
   if (ret && ret.deltaPct > 1.5 && rev && rev.deltaPct > 10) {
     recommendations.push({
       id: "rec-expand",
-      action: "Open an upsell play on the top retention cohort",
-      rationale: "Retention + revenue both compounding — expansion motion has highest ROI right now.",
-      impact: "Lift ACV by ~12% on qualified base",
+      action: "Launch upsell motion on the top retention cohort",
+      rationale: "Retention and revenue compounding — expansion motion has the highest ROI right now.",
+      impact: "Lift ACV by ~12% on the qualified base",
       effort: "medium",
       priority: "medium",
       owner: "Head of Growth",
     });
   }
 
-  // Fallback: positive operational signal
+  // --- Fallbacks so the panels are never empty ---
+
   if (alerts.length === 0) {
     alerts.push({
       id: "ops-green",
-      title: "All core KPIs within target bands",
-      detail: "No breaches detected. Continue weekly monitoring cadence.",
+      title: "All ITIL controls and business KPIs within target bands",
+      detail: "No active breaches. Continue weekly Service Review cadence and monthly KPI dashboards to C-level.",
       severity: "info",
       source: "Rules engine",
       createdMinutesAgo: 5,
@@ -174,8 +250,8 @@ export function generateInsights(data: OperationalData): Insights {
   if (recommendations.length === 0) {
     recommendations.push({
       id: "rec-review",
-      action: "Use this calm window for quarterly architecture review",
-      rationale: "Low-incident periods are the best time to invest in resilience and tech debt.",
+      action: "Use this calm window for a quarterly architecture & tech-debt review",
+      rationale: "Low-incident periods are the cheapest time to invest in resilience.",
       impact: "Compounds future reliability and delivery speed",
       effort: "low",
       priority: "low",
@@ -184,10 +260,4 @@ export function generateInsights(data: OperationalData): Insights {
   }
 
   return { alerts, recommendations };
-}
-
-function formatMinutes(m: number): string {
-  const h = Math.floor(m / 60);
-  const mm = Math.round(m % 60);
-  return `${h}h ${mm}m`;
 }

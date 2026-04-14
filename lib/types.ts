@@ -21,14 +21,26 @@ export interface Kpi {
 export interface FunnelStep {
   label: string;
   count: number;
+  note?: string;
 }
 
-export interface TeamMetric {
-  team: string;
-  productivity: number;
-  headcount: number;
-  sla: number;
-  slaTarget: number;
+export interface MarketingCampaign {
+  channel: string;
+  spend: number;
+  leads: number;
+  deals: number;
+  cac: number;
+  status: "healthy" | "watch" | "breach";
+}
+
+export interface ActiveProject {
+  code: string;
+  name: string;
+  pm: string;
+  status: "on-track" | "at-risk" | "delayed" | "mvp" | "launched";
+  progressPct: number;
+  budgetUsedPct: number;
+  nextMilestone: string;
 }
 
 export interface ChurnRisk {
@@ -43,8 +55,19 @@ export interface OperationalData {
   scenarioDescription: string;
   kpis: Kpi[];
   funnel: FunnelStep[];
-  teams: TeamMetric[];
+  campaigns: MarketingCampaign[];
+  projects: ActiveProject[];
   churn: ChurnRisk;
+  itOps: {
+    openTickets: number;
+    p1: number;
+    p2: number;
+    changesThisWeek: number;
+    failedChanges: number;
+    mttrMinutes: number;
+    slaCompliancePct: number;
+    ticketDeltaPct: number;
+  };
   monthOverMonth: {
     revenueDeltaPct: number;
     conversionDeltaPct: number;

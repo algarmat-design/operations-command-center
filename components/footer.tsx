@@ -12,6 +12,9 @@ export function Footer() {
             Designed, specified and shipped by me, with Claude (Anthropic) as pair-programmer. Demo data is simulated —
             the rules engine, architecture and UX decisions are my own.
           </p>
+          <p className="text-[10px] text-slate-600">
+            © {new Date().getFullYear()} Álvaro García · Built April 2026 · v1
+          </p>
         </div>
         <ul className="flex flex-wrap items-center gap-4">
           <li>
