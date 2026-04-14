@@ -19,10 +19,13 @@ export default function ResumePage() {
       {/* Hero */}
       <header className="grid grid-cols-1 gap-10 border-b border-white/5 pb-12 lg:grid-cols-[1fr_auto]">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.25em] text-emerald-300">{resume.headline}</p>
+          <p className="text-xs font-medium uppercase tracking-[0.25em] text-emerald-300">
+            Sr IT Director — Álvaro García
+          </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
             {resume.name}
           </h1>
+          <p className="mt-2 text-lg text-slate-300 sm:text-xl">{resume.headline}</p>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
             {resume.positioning}
           </p>
