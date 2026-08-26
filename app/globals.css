@@ -23,7 +23,9 @@
   --n-200: #dce3e5;
   --n-300: #c2cdd3;
   --n-400: #9aa9b2;
+  --n-450: #8496a0;
   --n-500: #74858f;
+  --n-550: #5d6c77;
   --n-600: #55656f;
   --n-700: #3b4a54;
   --n-800: #24313a;
@@ -69,8 +71,8 @@
   --text: light-dark(var(--n-900), var(--n-50));
   --text-muted: #55656f;
   --text-muted: light-dark(var(--n-600), var(--n-400));
-  --text-faint: #74858f;
-  --text-faint: light-dark(var(--n-500), var(--n-500));
+  --text-faint: #5d6c77;
+  --text-faint: light-dark(var(--n-550), var(--n-450));
   --text-inverse: #ffffff;
   --text-inverse: light-dark(var(--n-0), var(--n-950));
 
@@ -115,8 +117,8 @@
 
   --chart-grid: #edf1f3;
   --chart-grid: light-dark(var(--n-100), var(--n-800));
-  --chart-axis: #74858f;
-  --chart-axis: light-dark(var(--n-500), var(--n-400));
+  --chart-axis: #5d6c77;
+  --chart-axis: light-dark(var(--n-550), var(--n-450));
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
