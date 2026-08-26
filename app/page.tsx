@@ -1,4 +1,4 @@
-import { Hero } from "@/components/home/hero";
+import { Hero, ProofStrip } from "@/components/home/hero";
 import { CapabilityGrid } from "@/components/home/capability-grid";
 import { RoleFit } from "@/components/home/role-fit";
 import { DashboardCards } from "@/components/home/dashboard-cards";
@@ -10,6 +10,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <ProofStrip />
 
       <Section
         id="capabilities"

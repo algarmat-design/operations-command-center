@@ -104,6 +104,15 @@
   --critical-quiet: #fbebe9;
   --critical-quiet: light-dark(#fbebe9, #2e1715);
 
+  /* Hero artwork mask. Declared here, not in the media query below, so the
+     "no color inside @media" rule holds. */
+  --hero-art-mask: linear-gradient(
+    to right,
+    transparent 0%,
+    rgb(0 0 0 / 0.45) 24%,
+    rgb(0 0 0) 56%
+  );
+
   --chart-grid: #edf1f3;
   --chart-grid: light-dark(var(--n-100), var(--n-800));
   --chart-axis: #74858f;
@@ -218,6 +227,20 @@ body:has(.resume-print-root) > header,
 body:has(.resume-print-root) > footer,
 body:has(.resume-print-root) > a[href="#main"] {
   display: none;
+}
+
+/* Decorative hero artwork. The mask dissolves it before it reaches the
+   headline, so the copy never sits on top of image detail. Below lg the art
+   drops under the copy as a band and needs no mask at all. */
+.hero-art {
+  opacity: 0.8;
+}
+
+@media (min-width: 1024px) {
+  .hero-art {
+    -webkit-mask-image: var(--hero-art-mask);
+    mask-image: var(--hero-art-mask);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
