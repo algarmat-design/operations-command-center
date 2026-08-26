@@ -79,10 +79,12 @@ export function ProofStrip() {
     >
       <dl className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-x-6 gap-y-7 lg:grid-cols-4">
         {positioning.proofPoints.map((p) => (
+          // dt precedes dd in the DOM as the spec requires; `order` puts the
+          // figure on top visually. A <p> here would make the <dl> invalid.
           <div key={p.label} className="flex flex-col gap-1.5">
-            <dt className="sr-only">{p.label}</dt>
+            <dt className="order-2 max-w-[22ch] text-sm leading-snug text-text-muted">{p.label}</dt>
             <dd
-              className={`num font-semibold leading-none text-text ${
+              className={`num order-1 font-semibold leading-none text-text ${
                 // Word-based figures drop a type step so they do not shout over
                 // the numeric ones sitting beside them.
                 p.value.length > 8
@@ -92,7 +94,6 @@ export function ProofStrip() {
             >
               {p.value}
             </dd>
-            <p className="max-w-[22ch] text-sm leading-snug text-text-muted">{p.label}</p>
           </div>
         ))}
       </dl>

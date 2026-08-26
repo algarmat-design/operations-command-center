@@ -160,6 +160,66 @@ check(
   })(),
 );
 
+console.log("\ncolor contrast");
+{
+  // WCAG AA for body text is 4.5:1. Lighthouse caught --text-faint failing in
+  // light mode at 3.66:1; this recomputes every text-on-surface pair from
+  // globals.css itself, in both schemes, so a token edit cannot quietly
+  // reintroduce it.
+  const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  const ramp = new Map<string, string>();
+  for (const m of css.matchAll(/(--[a-z0-9-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) {
+    if (!ramp.has(m[1])) ramp.set(m[1], m[2]);
+  }
+
+  /** Resolve `--token` to its light and dark hex from the light-dark() pair. */
+  function resolve(token: string): [string, string] | null {
+    const m = css.match(
+      new RegExp(`${token}:\\s*light-dark\\(\\s*(?:var\\((--[a-z0-9-]+)\\)|(#[0-9a-fA-F]{6}))\\s*,\\s*(?:var\\((--[a-z0-9-]+)\\)|(#[0-9a-fA-F]{6}))\\s*\\)`),
+    );
+    if (!m) return null;
+    const light = m[2] ?? ramp.get(m[1]!);
+    const dark = m[4] ?? ramp.get(m[3]!);
+    return light && dark ? [light, dark] : null;
+  }
+
+  const lum = (hex: string) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+    const [r, g, b] = c.map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const ratio = (a: string, b: string) => {
+    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+
+  const SURFACES = ["--canvas", "--surface", "--surface-sunken"];
+  const TEXTS = ["--text", "--text-muted", "--text-faint", "--chart-axis"];
+
+  for (const [scheme, idx] of [["light", 0], ["dark", 1]] as const) {
+    let worstName = "";
+    let worst = Infinity;
+    for (const t of TEXTS) {
+      for (const bg of SURFACES) {
+        const fg = resolve(t);
+        const back = resolve(bg);
+        if (!fg || !back) continue;
+        const r = ratio(fg[idx], back[idx]);
+        if (r < worst) {
+          worst = r;
+          worstName = `${t} on ${bg}`;
+        }
+      }
+    }
+    check(
+      `${scheme}: every text token clears WCAG AA (4.5:1) on every surface`,
+      worst >= 4.5,
+      `worst is ${worstName} at ${worst.toFixed(2)}:1`,
+    );
+  }
+}
+
 console.log("\ndesign tokens");
 {
   // Criterion 8, proven mechanically: no color may exist only inside a media
