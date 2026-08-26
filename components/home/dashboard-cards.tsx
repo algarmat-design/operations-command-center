@@ -31,6 +31,10 @@ export function DashboardCards() {
                 <dt className="num w-16 shrink-0 text-[11px] uppercase tracking-[0.14em] text-text-faint">Asks</dt>
                 <dd className="text-text-muted">{d.question}</dd>
               </div>
+              <div className="flex gap-3">
+                <dt className="num w-16 shrink-0 text-[11px] uppercase tracking-[0.14em] text-text-faint">Period</dt>
+                <dd className="num text-xs text-text-faint">{d.period.split(" · ")[0]}</dd>
+              </div>
             </dl>
           </article>
         </li>

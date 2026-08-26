@@ -33,7 +33,7 @@ export default function HomePage() {
         id="dashboards"
         eyebrow="Dashboards I build"
         title="Four boards, four audiences, four different questions"
-        lede="Each one is built on synthetic data and labelled as such. They are here to show how I instrument a business and what I do with the reading, not to display anyone's real numbers."
+        lede="Worked examples, built by me on synthetic data and labelled as such on every board. They demonstrate business acumen — what to measure, who to measure it for, and what to conclude — not anyone's real numbers. Each board states its measurement period."
       >
         <DashboardCards />
       </Section>

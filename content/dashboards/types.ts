@@ -106,9 +106,11 @@ export interface Lane {
 export interface Initiative {
   readonly id: string;
   readonly lane: LaneId;
-  /** Kept to 34 characters or fewer so it fits a single-quarter bar. Asserted
-   *  by scripts/check-data.mts — deterministic layout starts with the data. */
   readonly name: string;
+  /** Abbreviated label for the gantt bar when the full name will not fit its
+   *  span. The full `name` is still used everywhere else. scripts/check-data.mts
+   *  asserts that whichever label the bar renders actually fits. */
+  readonly shortName?: string;
   readonly startQ: number;
   readonly endQ: number;
   readonly rag: Rag;

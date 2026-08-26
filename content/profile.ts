@@ -384,6 +384,7 @@ export const skills: readonly SkillGroup[] = [
 export const dashboards: readonly DashboardMeta[] = [
   {
     slug: "executive",
+    period: "Rolling 12 months, Sep 2025 – Aug 2026 · headline values as of 31 Aug 2026",
     title: "Executive Financial Dashboard",
     shortTitle: "Executive",
     framework: "C-level financial",
@@ -404,6 +405,7 @@ export const dashboards: readonly DashboardMeta[] = [
   },
   {
     slug: "it-operations",
+    period: "Rolling 12 months, Sep 2025 – Aug 2026 · headline values as of 31 Aug 2026 · incident queue as of 09:00",
     title: "IT Service Operations",
     shortTitle: "IT Operations",
     framework: "ITIL v4",
@@ -424,6 +426,7 @@ export const dashboards: readonly DashboardMeta[] = [
   },
   {
     slug: "devops",
+    period: "Rolling 12 months, Sep 2025 – Aug 2026 · headline values as of 31 Aug 2026",
     title: "DevOps Delivery Performance",
     shortTitle: "DevOps",
     framework: "DORA",
@@ -444,6 +447,7 @@ export const dashboards: readonly DashboardMeta[] = [
   },
   {
     slug: "roadmap",
+    period: "Forward-looking four quarters, Q1 – Q4 2027 · status as of 31 Aug 2026",
     title: "Transformation Roadmap",
     shortTitle: "Roadmap",
     framework: "Portfolio & dependencies",

@@ -43,8 +43,9 @@ export default function DashboardsIndexPage() {
             Four boards, four audiences
           </h1>
           <p className="max-w-[65ch] text-base leading-relaxed text-text-muted">
-            These are demonstrations of how I instrument an organization: what I measure, who I
-            measure it for, and what I conclude from it. All four run on synthetic data.
+            Four worked examples, built by me to demonstrate business acumen: what I measure, who
+            I measure it for, and what I conclude from the reading. All four run on synthetic data
+            and each states the period it covers. The numbers are invented; the judgment is the point.
           </p>
           <DemoDataBanner />
         </div>

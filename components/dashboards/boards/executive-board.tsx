@@ -5,9 +5,12 @@ import { Funnel } from "@/components/dashboards/funnel";
 import { ChartFrame } from "@/components/charts/chart-frame";
 import { ChartLegend, TimeSeries } from "@/components/charts/time-series";
 import { BarSeries } from "@/components/charts/bar-series";
+import { BoardSection } from "@/components/dashboards/dashboard-shell";
 import { Eyebrow } from "@/components/ui/primitives";
 
-const usd0 = (n: number) => `$${Math.round(n)}K`;
+// Thousands up to $1M, then millions — a board reads "$1.48M", never "$1483K".
+const usd0 = (n: number) =>
+  n >= 1000 ? `$${(n / 1000).toFixed(2)}M` : `$${Math.round(n)}K`;
 const pct1 = (n: number) => `${(n * 100).toFixed(1)}%`;
 
 export function ExecutiveBoard() {
@@ -25,10 +28,13 @@ export function ExecutiveBoard() {
 
   return (
     <>
-      <section className="flex flex-col gap-5">
-        <Eyebrow>Headline</Eyebrow>
+      <BoardSection
+        eyebrow="Headline"
+        title="The eight numbers a board asks for"
+        lede="Each card carries its unit, its target and the twelve-month trend behind the figure."
+      >
         <MetricGrid metrics={d.headline} />
-      </section>
+      </BoardSection>
 
       <section className="grid gap-8 lg:grid-cols-2">
         <div className="flex min-w-0 flex-col gap-3">
@@ -133,8 +139,11 @@ export function ExecutiveBoard() {
         </ChartFrame>
       </section>
 
-      <section className="flex flex-col gap-5">
-        <Eyebrow>Project portfolio</Eyebrow>
+      <BoardSection
+        eyebrow="Project portfolio"
+        title="What the investment actually returned"
+        lede="Reported per project rather than blended, because a single portfolio ROI hides which bets paid and which are still in flight."
+      >
         <div className="min-w-0 overflow-x-auto rounded-[var(--radius-card)] border border-line">
           <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
             <caption className="sr-only">Project portfolio investment against annualized benefit</caption>
@@ -173,13 +182,13 @@ export function ExecutiveBoard() {
             </tbody>
           </table>
         </div>
-      </section>
+      </BoardSection>
 
-      <section className="flex flex-col gap-5 border-t border-line pt-10">
-        <div className="flex flex-col gap-2">
+      <section className="flex min-w-0 flex-col gap-5 border-t border-line pt-10">
+        <div className="flex flex-col gap-1.5">
           <Eyebrow>Marketing to deals</Eyebrow>
-          <h2 className="text-xl">Where revenue actually comes from</h2>
-          <p className="max-w-[65ch] text-sm leading-relaxed text-text-muted">
+          <h2 className="text-xl md:text-2xl">Where revenue actually comes from</h2>
+          <p className="max-w-[70ch] text-sm leading-relaxed text-text-muted">
             The funnel a CFO cares about is the one that ends in closed business, not the one that ends
             in impressions. Blended CAC across all four channels is ${d.blendedCac} per deal.
           </p>

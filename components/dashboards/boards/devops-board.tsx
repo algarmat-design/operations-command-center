@@ -7,7 +7,8 @@ import { ChartFrame } from "@/components/charts/chart-frame";
 import { ChartLegend, TimeSeries } from "@/components/charts/time-series";
 import { BarSeries } from "@/components/charts/bar-series";
 import { Sparkline } from "@/components/charts/sparkline";
-import { Badge, Eyebrow } from "@/components/ui/primitives";
+import { BoardSection } from "@/components/dashboards/dashboard-shell";
+import { Badge } from "@/components/ui/primitives";
 
 const pct1 = (n: number) => `${(n * 100).toFixed(1)}%`;
 
@@ -58,20 +59,17 @@ export function DevopsBoard() {
 
   return (
     <>
-      <section className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <Eyebrow>The four DORA metrics</Eyebrow>
-          <p className="max-w-[65ch] text-sm leading-relaxed text-text-muted">
-            Each one is tagged with its published performance band. The bands are computed from the
-            values rather than written next to them, so a label here can never contradict its number.
-          </p>
-        </div>
+      <BoardSection
+        eyebrow="The four DORA metrics"
+        title="Throughput and stability, read as one trade-off"
+        lede="Each metric is tagged with its published performance band. The bands are computed from the values rather than written next to them, so a label here can never contradict its number."
+      >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {d.doraMetrics.map((m) => (
             <DoraCard key={m.id} metric={m} />
           ))}
         </div>
-      </section>
+      </BoardSection>
 
       <section className="grid gap-8 lg:grid-cols-2">
         <ChartFrame
@@ -136,10 +134,13 @@ export function DevopsBoard() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-5">
-        <Eyebrow>Secondary delivery signals</Eyebrow>
+      <BoardSection
+        eyebrow="Secondary delivery signals"
+        title="What sits underneath the DORA numbers"
+        lede="Pipeline health and security debt. These are the levers; the four above are the outcome."
+      >
         <MetricGrid metrics={d.secondary} />
-      </section>
+      </BoardSection>
 
       <section className="grid gap-8 lg:grid-cols-2">
         <div className="flex min-w-0 flex-col gap-3">

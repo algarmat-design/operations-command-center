@@ -134,19 +134,28 @@ export function Gantt({
               so status never competes with the brand accent for the same pixels. */}
           <rect x={p.x} y={p.y} width="4" height={G.BAR_H} rx="2" fill={RAG_VAR[p.rag]} />
 
-          <text x={p.x + 12} y={p.y + 17} fontSize="11.5" fontWeight="600" fill="var(--text)" aria-hidden="true">
-            {p.name}
+          {/* Two lines rather than one row shared with the meta: on a
+              single-quarter bar there is not enough width for both, and the
+              collision is invisible until real data lands in it. */}
+          <text
+            x={p.x + G.TEXT_INSET}
+            y={p.y + 15}
+            fontSize={G.NAME_FONT_PX}
+            fontWeight="600"
+            fill="var(--text)"
+            aria-hidden="true"
+          >
+            {p.shortName ?? p.name}
           </text>
           <text
-            x={p.x + p.w - 8}
-            y={p.y + 17}
-            textAnchor="end"
-            fontSize="10"
+            x={p.x + G.TEXT_INSET}
+            y={p.y + 27}
+            fontSize={G.META_FONT_PX}
             fill="var(--text-muted)"
             className="num"
             aria-hidden="true"
           >
-            {`${p.owner} · $${p.investment}K`}
+            {`${p.owner} · $${p.investment}K · ${p.startQ === p.endQ ? `Q${p.startQ}` : `Q${p.startQ}–Q${p.endQ}`}`}
           </text>
         </g>
       ))}

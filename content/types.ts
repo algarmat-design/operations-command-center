@@ -115,6 +115,8 @@ export interface DashboardMeta {
   readonly framework: string;
   readonly audience: string;
   readonly question: string;
+  /** The measurement window. A KPI without its timeframe is not a KPI. */
+  readonly period: string;
   readonly whatItProves: string;
   readonly metrics: readonly string[];
 }

@@ -6,6 +6,7 @@ import { ChartFrame } from "@/components/charts/chart-frame";
 import { ChartLegend, TimeSeries } from "@/components/charts/time-series";
 import { BarSeries } from "@/components/charts/bar-series";
 import { Gauge } from "@/components/charts/gauge";
+import { BoardSection } from "@/components/dashboards/dashboard-shell";
 import { Eyebrow } from "@/components/ui/primitives";
 
 const pct1 = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -26,10 +27,13 @@ export function OpsBoard() {
 
   return (
     <>
-      <section className="flex flex-col gap-5">
-        <Eyebrow>Service health</Eyebrow>
+      <BoardSection
+        eyebrow="Service health"
+        title="Are we meeting what we committed to?"
+        lede="Every metric carries its ITIL target. A number without a target is trivia."
+      >
         <MetricGrid metrics={d.headline} />
-      </section>
+      </BoardSection>
 
       <section className="grid gap-8 lg:grid-cols-2">
         <ChartFrame
@@ -136,8 +140,11 @@ export function OpsBoard() {
         </ChartFrame>
       </section>
 
-      <section className="flex flex-col gap-5">
-        <Eyebrow>Rates against target</Eyebrow>
+      <BoardSection
+        eyebrow="Rates against target"
+        title="Three rates, each with its threshold marked"
+        lede="The tick on each arc is the target. Amber means the gap is real, not that the number fell."
+      >
         <div className="grid gap-4 sm:grid-cols-3">
           {[
             {
@@ -180,12 +187,12 @@ export function OpsBoard() {
             </div>
           ))}
         </div>
-      </section>
+      </BoardSection>
 
-      <section className="flex flex-col gap-5 border-t border-line pt-10">
-        <div className="flex flex-col gap-2">
+      <section className="flex min-w-0 flex-col gap-5 border-t border-line pt-10">
+        <div className="flex flex-col gap-1.5">
           <Eyebrow>Active queue</Eyebrow>
-          <h2 className="text-xl">Open incidents right now</h2>
+          <h2 className="text-xl md:text-2xl">Open incidents right now</h2>
           <p className="max-w-[65ch] text-sm leading-relaxed text-text-muted">
             Severity, owner and time remaining against the SLA target. One ticket is already past its
             clock — see the reading below.

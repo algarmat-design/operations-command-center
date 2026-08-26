@@ -12,6 +12,7 @@ import * as ops from "../content/dashboards/it-operations.ts";
 import * as devops from "../content/dashboards/devops.ts";
 import { band } from "../content/dashboards/dora.ts";
 import { initiatives, lanes, QUARTERS } from "../content/dashboards/roadmap.ts";
+import { labelFits } from "../content/dashboards/roadmap-geometry.ts";
 
 let failures = 0;
 
@@ -124,8 +125,16 @@ check(
   "every lane id is declared",
   initiatives.every((i) => lanes.some((l) => l.id === i.lane)),
 );
-const tooLong = initiatives.filter((i) => i.name.length > 34);
-check("initiative names fit a single-quarter bar (<= 34 chars)", tooLong.length === 0, tooLong.map((i) => `${i.name} (${i.name.length})`).join(", "));
+// Text overlap inside a gantt bar is invisible until real data lands in it, so
+// the fit is asserted here rather than trusted to a character-count rule of thumb.
+const overflowing = initiatives.filter(
+  (i) => !labelFits(i.shortName ?? i.name, i.endQ - i.startQ + 1),
+);
+check(
+  "every gantt bar label fits the span it is drawn in",
+  overflowing.length === 0,
+  overflowing.map((i) => `${i.shortName ?? i.name} (Q${i.startQ}–Q${i.endQ})`).join(", "),
+);
 // The dependency semantics the gantt states: a target cannot COMPLETE until its
 // source completes. Overlapping start quarters are legitimate and expected —
 // underwriting runs alongside PCI re-certification, it just cannot ship first.

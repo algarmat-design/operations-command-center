@@ -4,6 +4,7 @@ import { Gantt } from "@/components/charts/gantt";
 import { ChartFrame } from "@/components/charts/chart-frame";
 import { BarSeries } from "@/components/charts/bar-series";
 import { TimeSeries } from "@/components/charts/time-series";
+import { BoardSection } from "@/components/dashboards/dashboard-shell";
 import { Badge, Eyebrow, Stat } from "@/components/ui/primitives";
 
 const RAG_TONE: Record<Rag, "good" | "warn" | "critical"> = {
@@ -28,9 +29,15 @@ export function RoadmapBoard() {
         <Stat value={`${d.portfolioRatio.toFixed(2)}×`} label="Portfolio benefit to cost" size="md" />
       </section>
 
-      <section className="flex flex-col gap-4">
+      <BoardSection
+        eyebrow="The plan"
+        title="Four quarters, four lanes, twelve initiatives"
+        lede="Sequencing and dependencies are the content here — the bars are only how it is drawn."
+      >
         <div className="flex flex-wrap items-center gap-3">
-          <Eyebrow>Status</Eyebrow>
+          <span className="num text-[13px] font-bold uppercase tracking-[0.12em] text-text-muted">
+            Status
+          </span>
           <Badge tone="good">{d.ragCounts.green} on track</Badge>
           <Badge tone="warn">{d.ragCounts.amber} at risk</Badge>
           <Badge tone="critical">{d.ragCounts.red} off track</Badge>
@@ -58,7 +65,7 @@ export function RoadmapBoard() {
         >
           <Gantt lanes={d.lanes} initiatives={d.initiatives} quarters={[...d.QUARTERS]} />
         </ChartFrame>
-      </section>
+      </BoardSection>
 
       <section className="grid gap-8 lg:grid-cols-2">
         <ChartFrame
@@ -116,10 +123,10 @@ export function RoadmapBoard() {
         </ChartFrame>
       </section>
 
-      <section className="flex flex-col gap-5 border-t border-line pt-10">
-        <div className="flex flex-col gap-2">
+      <section className="flex min-w-0 flex-col gap-5 border-t border-line pt-10">
+        <div className="flex flex-col gap-1.5">
           <Eyebrow>Initiative detail</Eyebrow>
-          <h2 className="text-xl">Every initiative, and why it is where it is</h2>
+          <h2 className="text-xl md:text-2xl">Every initiative, and why it is where it is</h2>
         </div>
 
         <ol className="flex flex-col divide-y divide-line border-y border-line">

@@ -39,7 +39,7 @@ export function ChartFrame({
   return (
     <figure className="flex min-w-0 flex-col gap-3">
       <figcaption className="flex flex-col gap-1">
-        <h3 id={`${id}-title`} className="text-base leading-snug text-text">
+        <h3 id={`${id}-title`} className="text-lg font-bold leading-snug text-text">
           {title}
         </h3>
         <p className="num text-[11px] uppercase tracking-[0.14em] text-text-faint">Unit: {unit}</p>

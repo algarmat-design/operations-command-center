@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { DashboardMeta } from "@/content/types";
 import type { Insight } from "@/content/dashboards/types";
-import { dashboards } from "@/content/profile";
+import { dashboards, identity } from "@/content/profile";
 import { Badge, Eyebrow } from "@/components/ui/primitives";
 
 /**
@@ -71,6 +71,12 @@ export function DashboardShell({
                 </dt>
                 <dd className="max-w-[65ch] text-sm text-text">{meta.question}</dd>
               </div>
+              <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                <dt className="num w-52 shrink-0 text-[11px] uppercase tracking-[0.16em] text-text-faint">
+                  Measurement period
+                </dt>
+                <dd className="num max-w-[65ch] text-sm text-text">{meta.period}</dd>
+              </div>
             </dl>
           </div>
         </div>
@@ -110,6 +116,34 @@ export function DashboardShell({
   );
 }
 
+/**
+ * Section header for a dashboard. Boards were using a bare eyebrow as a section
+ * title, which read as a throwaway label rather than a heading — this gives each
+ * block a real, scannable h2.
+ */
+export function BoardSection({
+  eyebrow,
+  title,
+  lede,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="flex min-w-0 flex-col gap-5">
+      <header className="flex flex-col gap-1.5">
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h2 className="text-xl md:text-2xl">{title}</h2>
+        {lede && <p className="max-w-[70ch] text-sm leading-relaxed text-text-muted">{lede}</p>}
+      </header>
+      {children}
+    </section>
+  );
+}
+
 const TONE_LABEL = {
   good: "Working",
   warn: "Watch",
@@ -119,14 +153,21 @@ const TONE_LABEL = {
 
 export function DemoDataBanner() {
   return (
-    <p
+    <div
       role="note"
-      className="flex flex-wrap items-baseline gap-x-2 gap-y-1 rounded-md border border-warn/30 bg-warn-quiet px-4 py-3 text-sm text-text"
+      className="flex flex-col gap-1.5 rounded-md border border-warn/30 bg-warn-quiet px-4 py-3.5 text-sm"
     >
-      <strong className="font-semibold text-warn">Demo data.</strong>
-      <span className="text-text-muted">
-        Synthetic figures built to illustrate the instrumentation. No employer data.
-      </span>
-    </p>
+      <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-text">
+        <strong className="font-bold text-warn">Example dashboard — demo data.</strong>
+        <span className="text-text-muted">
+          Synthetic figures built to illustrate the instrumentation. No employer data.
+        </span>
+      </p>
+      <p className="max-w-[80ch] leading-relaxed text-text-muted">
+        These four boards are worked examples by {identity.name}, built to demonstrate business
+        acumen: what to measure, who to measure it for, and what to conclude from the reading.
+        The numbers are invented; the judgment is the point.
+      </p>
+    </div>
   );
 }

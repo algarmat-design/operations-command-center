@@ -10,20 +10,44 @@ import type { Initiative, LaneId } from "./types.ts";
 
 export const G = {
   LANE_LABEL_W: 168,
-  QUARTER_W: 156,
+  QUARTER_W: 200,
   HEADER_H: 44,
-  ROW_H: 44,
-  BAR_H: 26,
+  ROW_H: 52,
+  /** Bars carry two lines: the name, then owner and investment underneath. */
+  BAR_H: 34,
   LANE_PAD_TOP: 12,
   LANE_PAD_BOT: 16,
   /** Horizontal padding inside a quarter cell. */
   BAR_INSET: 8,
+  /** Left padding for text inside a bar, clearing the RAG cap. */
+  TEXT_INSET: 12,
   /** Connector stub length out of a bar edge. */
   ELBOW: 14,
   /** Offset per overlapping connector so parallel routes stay distinguishable. */
   DEP_STAGGER: 4,
   QUARTERS: 4,
+  NAME_FONT_PX: 12,
+  META_FONT_PX: 9.5,
 } as const;
+
+/**
+ * Deterministic text fitting, so the layout needs no measurement.
+ *
+ * Public Sans at semibold averages ~0.55em per character; JetBrains Mono has a
+ * fixed 0.6em advance. Both estimates run slightly wide on purpose — a bar that
+ * reserves a little too much space looks fine, one that reserves too little
+ * overlaps, which is the failure this replaces.
+ */
+export const nameWidth = (text: string) => text.length * G.NAME_FONT_PX * 0.56;
+export const metaWidth = (text: string) => text.length * G.META_FONT_PX * 0.6;
+
+/** Usable text width inside a bar spanning `span` quarters. */
+export const barTextWidth = (span: number) =>
+  span * G.QUARTER_W - 2 * G.BAR_INSET - G.TEXT_INSET - 8;
+
+/** Whether a bar label fits its own span. Asserted by scripts/check-data.mts. */
+export const labelFits = (text: string, span: number) =>
+  nameWidth(text) <= barTextWidth(span);
 
 export interface PlacedInitiative extends Initiative {
   readonly laneIndex: number;

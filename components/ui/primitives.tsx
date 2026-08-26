@@ -43,7 +43,7 @@ export function Section({
         {(eyebrow || title || lede) && (
           <header className="flex flex-col gap-3">
             {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-            {title && <h2 className="max-w-[24ch] text-2xl md:text-3xl">{title}</h2>}
+            {title && <h2 className="max-w-[24ch] text-2xl md:text-[2rem]">{title}</h2>}
             {lede && <p className="max-w-[65ch] text-base leading-relaxed text-text-muted">{lede}</p>}
           </header>
         )}
@@ -55,7 +55,7 @@ export function Section({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="num text-[11px] font-medium uppercase tracking-[0.18em] text-text-faint">{children}</p>
+    <p className="num text-[13px] font-bold uppercase tracking-[0.12em] text-text-muted">{children}</p>
   );
 }
 

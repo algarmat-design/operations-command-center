@@ -87,6 +87,7 @@ export const initiatives: readonly Initiative[] = [
     id: "s3",
     lane: "security",
     name: "PCI DSS 4.0 re-certification",
+    shortName: "PCI DSS 4.0 re-cert",
     startQ: 4,
     endQ: 4,
     rag: "amber",
