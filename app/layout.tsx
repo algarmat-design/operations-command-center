@@ -1,58 +1,99 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import Link from "next/link";
+import { Chivo, JetBrains_Mono, Public_Sans } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/sidebar";
-import { Footer } from "@/components/footer";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { SkipLink } from "@/components/ui/primitives";
+import { capabilities, identity, positioning } from "@/content/profile";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
-const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"], display: "swap" });
+// All three are variable fonts, so `weight` is deliberately omitted — passing it
+// would force static per-weight files instead of one variable file per family.
+const chivo = Chivo({ variable: "--font-chivo", subsets: ["latin"], display: "swap" });
+const publicSans = Public_Sans({ variable: "--font-public-sans", subsets: ["latin"], display: "swap" });
+const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], display: "swap" });
+
+const TITLE = `${identity.name} — ${identity.title}`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://alvarogarcia.space"),
-  title: "Operations Command Center · Álvaro García",
-  description:
-    "A portfolio project by Álvaro García — Senior IT Director. Executive dashboard that simulates running multi-business operations with KPIs, incident detection and automated recommendations.",
+  metadataBase: new URL(identity.site),
+  title: { default: TITLE, template: `%s · ${identity.name}` },
+  description: positioning.subhead,
+  applicationName: TITLE,
+  authors: [{ name: identity.name, url: identity.site }],
+  creator: identity.name,
   openGraph: {
-    title: "Operations Command Center · Álvaro García",
-    description:
-      "Portfolio project — executive dashboard with KPIs, incident detection, and an automated recommendations engine.",
-    type: "website",
-    url: "https://alvarogarcia.space",
+    type: "profile",
+    siteName: TITLE,
+    title: TITLE,
+    description: positioning.subhead,
+    url: identity.site,
+    locale: "en_US",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: positioning.subhead,
+  },
+  robots: { index: true, follow: true },
 };
+
+/**
+ * Person schema. This is what a search engine reads when someone searches the
+ * name, so it is built from the same content module the page renders.
+ */
+function personJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: identity.name,
+    alternateName: identity.alternateName,
+    jobTitle: identity.title,
+    description: positioning.subhead,
+    url: identity.site,
+    email: `mailto:${identity.email}`,
+    telephone: identity.phone,
+    sameAs: [identity.linkedin],
+    address: { "@type": "PostalAddress", addressLocality: "Guadalajara", addressCountry: "MX" },
+    knowsAbout: capabilities.map((c) => c.name),
+    knowsLanguage: ["en", "es"],
+  };
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable} h-full antialiased`}>
-      <body className="min-h-full bg-[var(--background)] text-[var(--foreground)]">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <div className="flex min-h-screen flex-1 flex-col">
-            <MobileNav />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </div>
+    <html
+      lang="en"
+      // Next 16 no longer forces scroll-behavior during navigation; this opts the
+      // anchor links (/capabilities#id) back into smooth scrolling.
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+      className={`${chivo.variable} ${publicSans.variable} ${jetbrains.variable} h-full antialiased`}
+    >
+      <body className="flex min-h-full flex-col bg-canvas text-text">
+        {/* First child of <body>: runs before paint, so an explicit theme choice
+            never flashes. Does nothing in the common case — color-scheme already
+            resolves the OS preference in pure CSS. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}})()",
+          }}
+        />
+        <script
+          type="application/ld+json"
+          // JSON.stringify does not escape `<`; doing it by hand prevents the
+          // string from closing the script tag.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd()).replace(/</g, "\\u003c"),
+          }}
+        />
+        <SkipLink />
+        <SiteHeader />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter />
       </body>
     </html>
-  );
-}
-
-function MobileNav() {
-  return (
-    <div className="flex items-center justify-between border-b border-white/5 bg-[var(--surface)]/60 px-4 py-3 lg:hidden">
-      <Link href="/" className="flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-300 text-xs font-bold">
-          CC
-        </span>
-        <span className="text-sm font-semibold text-white">Command Center</span>
-      </Link>
-      <div className="flex items-center gap-3 text-xs text-slate-300">
-        <Link href="/" className="hover:text-white">Dashboard</Link>
-        <Link href="/workflow" className="hover:text-white">Workflow</Link>
-        <Link href="/resume" className="text-emerald-300 hover:text-emerald-200">Resume</Link>
-      </div>
-    </div>
   );
 }

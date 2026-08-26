@@ -1,55 +1,326 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. RAW PALETTE — theme-independent. Declared once, never overridden.
+   Keep the brand hexes in sync with content/brand.ts (satori cannot read
+   CSS custom properties, so the OG image mirrors these five by hand).
+   ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-  --background: #020617;
-  --foreground: #e2e8f0;
-  --surface: #0b1220;
-  --surface-2: #111a2e;
-  --border: #1e293b;
-  --accent: #10b981;
-  --accent-soft: #064e3b;
-  --warning: #f59e0b;
-  --danger: #f43f5e;
+  --brand-ink: #101820;
+  --brand-slate: #2c3e50;
+  --brand-teal: #16a085;
+  --brand-teal-deep: #0e6655;
+  --brand-sky: #5dade2;
+  --brand-amber: #f39c12;
+  --brand-paper: #f7f9fa;
+  --brand-line: #dce3e5;
+
+  /* Blue-slate neutral ramp. Every step carries a blue cast — never pure gray. */
+  --n-0: #ffffff;
+  --n-25: #fbfcfd;
+  --n-50: #f7f9fa;
+  --n-100: #edf1f3;
+  --n-200: #dce3e5;
+  --n-300: #c2cdd3;
+  --n-400: #9aa9b2;
+  --n-500: #74858f;
+  --n-600: #55656f;
+  --n-700: #3b4a54;
+  --n-800: #24313a;
+  --n-850: #18232b;
+  --n-900: #101820;
+  --n-950: #0a1116;
+
+  /* Status signals. Deliberately NOT teal — teal is brand, never semantics. */
+  --sig-good-500: #1e8e5a;
+  --sig-good-300: #4fbf88;
+  --sig-warn-500: #b26a00;
+  --sig-warn-300: #f7c46c;
+  --sig-critical-500: #c0392b;
+  --sig-critical-300: #e5796b;
+
+  /* Categorical chart series. Order is stable and meaningful. */
+  --series-1: #0e6655;
+  --series-2: #5dade2;
+  --series-3: #2c3e50;
+  --series-4: #f39c12;
+  --series-5: #7d6b9e;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. SEMANTIC TOKENS — each declared exactly once, unconditionally.
+   The light literal comes first as a real fallback for engines without
+   light-dark() (Safari < 17.5); the light-dark() declaration then wins
+   everywhere else. No color is ever defined inside @media or [data-theme].
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  color-scheme: light dark;
+
+  --canvas: #f7f9fa;
+  --canvas: light-dark(var(--n-50), var(--n-950));
+  --surface: #ffffff;
+  --surface: light-dark(var(--n-0), var(--n-900));
+  --surface-raised: #fbfcfd;
+  --surface-raised: light-dark(var(--n-25), var(--n-850));
+  --surface-sunken: #edf1f3;
+  --surface-sunken: light-dark(var(--n-100), #0d151a);
+
+  --text: #101820;
+  --text: light-dark(var(--n-900), var(--n-50));
+  --text-muted: #55656f;
+  --text-muted: light-dark(var(--n-600), var(--n-400));
+  --text-faint: #74858f;
+  --text-faint: light-dark(var(--n-500), var(--n-500));
+  --text-inverse: #ffffff;
+  --text-inverse: light-dark(var(--n-0), var(--n-950));
+
+  --line: #dce3e5;
+  --line: light-dark(var(--n-200), var(--n-800));
+  --line-strong: #c2cdd3;
+  --line-strong: light-dark(var(--n-300), var(--n-700));
+
+  --accent: #0e6655;
+  --accent: light-dark(var(--brand-teal-deep), var(--brand-teal));
+  --accent-contrast: #ffffff;
+  --accent-contrast: light-dark(#ffffff, var(--n-950));
+  --accent-quiet: #e6f4f0;
+  --accent-quiet: light-dark(#e6f4f0, #10302a);
+
+  --link: #0e6655;
+  --link: light-dark(var(--brand-teal-deep), var(--brand-sky));
+  --focus: #2c3e50;
+  --focus: light-dark(var(--brand-slate), var(--brand-sky));
+
+  --good: #1e8e5a;
+  --good: light-dark(var(--sig-good-500), var(--sig-good-300));
+  --warn: #b26a00;
+  --warn: light-dark(var(--sig-warn-500), var(--sig-warn-300));
+  --critical: #c0392b;
+  --critical: light-dark(var(--sig-critical-500), var(--sig-critical-300));
+  --good-quiet: #e8f5ee;
+  --good-quiet: light-dark(#e8f5ee, #10291f);
+  --warn-quiet: #fdf3e2;
+  --warn-quiet: light-dark(#fdf3e2, #2e2312);
+  --critical-quiet: #fbebe9;
+  --critical-quiet: light-dark(#fbebe9, #2e1715);
+
+  /* Hero artwork mask. Declared here, not in the media query below, so the
+     "no color inside @media" rule holds. */
+  --hero-art-mask: linear-gradient(
+    to right,
+    transparent 0%,
+    rgb(0 0 0 / 0.45) 24%,
+    rgb(0 0 0) 56%
+  );
+
+  --chart-grid: #edf1f3;
+  --chart-grid: light-dark(var(--n-100), var(--n-800));
+  --chart-axis: #74858f;
+  --chart-axis: light-dark(var(--n-500), var(--n-400));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. EXPLICIT TOGGLE — flips the mode only. Never declares a color.
+   ═══════════════════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. TAILWIND BRIDGE — `inline` emits var() so runtime theme flips work.
+   ═══════════════════════════════════════════════════════════════════════════ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-canvas: var(--canvas);
   --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-border: var(--border);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-text-inverse: var(--text-inverse);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-mono);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-quiet: var(--accent-quiet);
+  --color-link: var(--link);
+  --color-focus: var(--focus);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-critical: var(--critical);
+  --color-good-quiet: var(--good-quiet);
+  --color-warn-quiet: var(--warn-quiet);
+  --color-critical-quiet: var(--critical-quiet);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+
+  --font-display: var(--font-chivo);
+  --font-sans: var(--font-public-sans);
+  --font-mono: var(--font-jetbrains);
+
+  --radius-card: 10px;
 }
 
-html,
-body {
-  background: var(--background);
-  color: var(--foreground);
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+html {
+  background: var(--canvas);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-feature-settings: "cv11", "ss01";
+  font-family: var(--font-public-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* The body never scrolls horizontally. Wide content scrolls inside its own box. */
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-chivo), var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  text-wrap: balance;
+  letter-spacing: -0.015em;
+}
+
+/* Data, labels and metrics. Tabular figures so columns of numbers align. */
+.num,
+[data-num] {
+  font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+:where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 ::selection {
-  background: var(--accent-soft);
-  color: #ecfdf5;
+  background: var(--accent-quiet);
+  color: var(--text);
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 8px;
+  background: var(--line-strong);
+  border-radius: 10px;
 }
 *::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* /resume/print renders inside the root layout, so a nested layout cannot drop
+   the site chrome. :has() removes it from the outside in — declarative, no JS,
+   and it keeps the on-screen page identical to what the PDF captures. */
+body:has(.resume-print-root) > header,
+body:has(.resume-print-root) > footer,
+body:has(.resume-print-root) > a[href="#main"] {
+  display: none;
+}
+
+/* Decorative hero artwork. The mask dissolves it before it reaches the
+   headline, so the copy never sits on top of image detail. Below lg the art
+   drops under the copy as a band and needs no mask at all. */
+.hero-art {
+  opacity: 0.8;
+}
+
+@media (min-width: 1024px) {
+  .hero-art {
+    -webkit-mask-image: var(--hero-art-mask);
+    mask-image: var(--hero-art-mask);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. PRINT — drives /resume/print, which is the source for public/resume.pdf.
+   Playwright also forces colorScheme:'light'; this is the second belt.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  @page {
+    size: A4;
+    /* Margins come from Playwright's page.pdf() so they stay in one place. */
+    margin: 0;
+  }
+
+  :root {
+    color-scheme: light only;
+  }
+
+  html,
+  body {
+    background: var(--n-0);
+    color: var(--n-900);
+  }
+
+  /* Chrome that must never reach paper. */
+  header[class*="sticky"],
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  a {
+    color: var(--brand-teal-deep);
+    text-decoration: none;
+  }
+
+  /* External URLs are worth printing; a mailto or tel already shows its address. */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: var(--n-600);
+    word-break: break-all;
+  }
+  a[href^="mailto:"]::after,
+  a[href^="tel:"]::after,
+  a[href^="https://wa.me"]::after,
+  a[href^="https://www.linkedin.com"]::after {
+    content: "";
+  }
+
+  /* Never split a role, a project or a credential across a page boundary. */
+  .resume-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .resume-print {
+    font-size: 10pt;
+    line-height: 1.42;
+  }
 }

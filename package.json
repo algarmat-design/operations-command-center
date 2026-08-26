@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typegen": "next typegen",
+    "check:data": "node scripts/check-data.mts",
+    "check:layout": "node scripts/check-layout.mts",
+    "resume:pdf": "next build && node scripts/generate-resume-pdf.mts"
   },
   "dependencies": {
     "next": "16.2.3",
@@ -20,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
+    "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
