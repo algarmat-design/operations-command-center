@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { identity, positioning } from "@/content/profile";
+import { careerReel, identity, positioning } from "@/content/profile";
 import { ButtonLink } from "@/components/ui/primitives";
 
 /**
@@ -38,6 +38,9 @@ export function Hero() {
         <div className="flex max-w-[46rem] flex-wrap items-center gap-3 lg:max-w-[38rem]">
           <ButtonLink href="/resume.pdf" download={identity.resumeFileName}>
             Download CV
+          </ButtonLink>
+          <ButtonLink href="#reel" variant="outline">
+            Watch career reel · {careerReel.duration}
           </ButtonLink>
           <ButtonLink href={identity.linkedin} variant="outline" external>
             LinkedIn

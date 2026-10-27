@@ -87,6 +87,29 @@ export interface Project {
   readonly blurb: string;
   readonly highlights: readonly string[];
   readonly stack: readonly string[];
+  /** A closed set, so no card can claim more than is actually live. */
+  readonly status: ProjectStatus;
+  /** Public URL only; client systems on private domains have none. */
+  readonly url?: `https://${string}`;
+}
+
+export type ProjectStatus = "In production" | "Delivered";
+
+/** The career video. Duration is display text and must match the MP4. */
+export interface CareerReel {
+  readonly src: `/${string}.mp4`;
+  readonly poster: `/${string}.jpg`;
+  /** "m:ss", shown on the hero button and the section eyebrow. */
+  readonly duration: string;
+  readonly caption: string;
+  /** Everything the reel shows on screen, in order: its text equivalent. */
+  readonly transcript: readonly string[];
+}
+
+/** One habit of the AI-native engineering practice, stated as a checkable rule. */
+export interface PracticeItem {
+  readonly title: string;
+  readonly detail: string;
 }
 
 export interface EducationEntry {

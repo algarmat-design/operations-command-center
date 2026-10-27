@@ -12,18 +12,26 @@ This version has breaking changes — APIs, conventions, and file structure may 
 about Alvaro — CV text, metrics, contact details. `/resume`, `/resume/print` and
 `public/resume.pdf` all render from it, so they cannot disagree.
 
-`experience`, `credentials` and `skills` are transcribed **verbatim** from the
-resume PDF. Do not paraphrase, re-date or embellish them.
+`experience`, `credentials` and `skills` are the resume itself: the web page,
+`/resume/print` and `public/resume.pdf` render from them. The ATS `.docx`
+resume is built from the same data by a script outside this repo; regenerate
+it whenever these change. Every figure must be traceable to a source repository or a prior resume
+— do not round up, re-date or embellish.
 
 Never hardcode CV text, a metric or a contact detail in a component. Verify with:
 
 ```bash
-grep -rniE "algarmat|3128-8999|Credit Pros|Rackspace|Payclip|Morgan Stanley" \
+grep -rniE "algarmat|3128-8999|Credit Pros|Rackspace|Payclip|Morgan Stanley|Grupo Alista" \
   app components scripts --include='*.ts' --include='*.tsx'   # must be empty
 ```
 
-Alista Consulting is deliberately absent from the site. Its technical work is
-represented through `projects` and `capabilities`, never as an employer.
+Grupo Alista appears as an employer — Fractional CTO & Technology Consultant,
+April 2026 – Present. It is never described as owned or founded by Alvaro.
+Client companies of that role are described ("a private security firm"),
+never named, in the site's text and resume. Exception decided by Alvaro on
+2026-10-26: the career reel (`public/career-reel.mp4`) and its transcript name
+SackDesk, SESPO / Mega Seguridad and Grupo 414. Product names (DENTALISTA,
+GuardTrack) are fine everywhere.
 
 ## Design tokens only
 

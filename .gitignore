@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# brag video build workspace (deliverables are copied to public/)
+/brag-output/
+/brag-output-90/
