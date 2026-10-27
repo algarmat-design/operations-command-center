@@ -1,9 +1,11 @@
 import type {
   Capability,
+  CareerReel,
   Credentials,
   DashboardMeta,
   Identity,
   Positioning,
+  PracticeItem,
   Project,
   Role,
   RoleFit,
@@ -13,17 +15,20 @@ import type {
 /**
  * Single source of truth for everything the site says about Alvaro.
  *
- * `experience`, `credentials` and `skills` are transcribed verbatim from
- * Alvaro_Garcia_Resume_2026.pdf. Do not paraphrase, re-date or embellish them —
- * the web page, the print page and public/resume.pdf all render from here, and
- * they must agree with the PDF recruiters already hold.
+ * `experience`, `credentials` and `skills` ARE the resume: the web page, the
+ * print page and public/resume.pdf render from here, and the ATS .docx resume is
+ * exported from this module. Edit a fact here and regenerate both.
+ *
+ * Every figure in the Grupo Alista role and in `projects` is taken from the
+ * source repositories (git history, schema migrations) as of October 2026.
+ * Client companies are described, never named.
  */
 
 export const identity: Identity = {
   name: "Alvaro Garcia",
   alternateName: "Álvaro García",
-  title: "IT Senior Director",
-  tagline: "IT and engineering executive — strategy, delivery, and P&L.",
+  title: "Fractional CTO & IT Executive",
+  tagline: "IT and engineering executive — strategy, delivery, and P&L, with the hands to build it.",
   location: "Guadalajara, Mexico",
   timezone: "GMT-6 (Central)",
   email: "algarmat@gmail.com",
@@ -34,15 +39,15 @@ export const identity: Identity = {
   github: "https://github.com/algarmat-design",
   site: "https://alvarogarcia.space",
   availability: "Open to remote roles worldwide",
-  resumeFileName: "Alvaro-Garcia-IT-Senior-Director.pdf",
+  resumeFileName: "Alvaro_Garcia_Resume_2026.pdf",
 };
 
 export const positioning: Positioning = {
   headline: "I lead technology organizations where the platform is regulated, the budget is finite, and the roadmap still has to ship.",
   subhead:
-    "25+ years across Fortune 500 enterprise and high-growth fintech — IT strategy, software development, and cloud modernization, with full multimillion-dollar P&L ownership.",
+    "25+ years across Fortune 500 enterprise and high-growth fintech — IT strategy, software development, and cloud modernization, with full multimillion-dollar P&L ownership. Today, as Fractional CTO at Grupo Alista, I architect and ship the production systems myself.",
   summary:
-    "IT and Engineering executive combining C-level leadership with hands-on delivery: architecting AI-driven applications, modular platforms, and secure cloud infrastructure across AWS, Azure and GCP. Deep expertise in payments and PCI-compliant credit-card transactional environments, AI/LLM integration, and SDLC-driven engineering leadership. Leadership is measured by the quality, speed and accountability of its decisions — my job is to give an executive team the clarity and context required to act with confidence.",
+    "IT and Engineering executive combining C-level leadership with hands-on delivery. As Fractional CTO and Technology Consultant at Grupo Alista, I have shipped multi-tenant SaaS platforms, CRMs, websites and automation to production since April 2026 — using an AI-native engineering practice (Claude Code, Codex, MCP tooling) held to mandatory security review and cloud-cost discipline. Before that: 25+ years leading IT at Hewlett-Packard, Morgan Stanley, Clip, Rackspace and The Credit Pros — PCI-compliant payments, multi-cloud and SDLC-driven engineering leadership.",
   proofPoints: [
     { value: "25+", label: "Years in technology leadership" },
     { value: "Fortune 500", label: "Enterprise and fintech environments" },
@@ -184,17 +189,35 @@ export const roleFit: readonly RoleFit[] = [
 ];
 
 /**
- * Verbatim from the resume PDF. Company names, titles, dates and achievement
- * wording are transcribed, not summarized.
+ * Company names, titles, dates and achievement wording. Roles before Grupo
+ * Alista are transcribed from the 2026 resume, not summarized.
  */
 export const experience: readonly Role[] = [
   {
+    company: "Grupo Alista",
+    title: "Fractional CTO & Technology Consultant",
+    period: "April 2026 – Present",
+    location: "Guadalajara, Mexico",
+    summary:
+      "Technology leadership for a Mexican business group and its clients in health, private security, foreign trade, manufacturing and retail — architecting and personally building their production platforms.",
+    achievements: [
+      "Architected and shipped DENTALISTA, a multi-tenant dental-practice SaaS (Next.js, PostgreSQL row-level security, AWS CDK, Stripe subscription billing) — 400+ commits and 76 schema migrations, live at dentalista.app and built for Mexican data-privacy law (LFPDPPP).",
+      "Built GuardTrack, a guard-patrol platform — Android app (Expo / React Native) plus web console on Supabase — that proves every checkpoint with a signed QR scan, photo and GPS; 240 commits and 26 edge functions delivered in 18 days.",
+      "Delivered an attendance, payroll and ISO 9001 platform for a private security firm with 380+ guards and 100+ client accounts (Next.js, Drizzle, PostgreSQL on AWS) — 420 commits since May 2026.",
+      "Built CRMs and back-office systems: an AI-assisted consulting back office (quotes, CFDI e-invoice ingestion, bank reconciliation), a cross-platform desktop sales CRM with a 25-stage pipeline, a customs-operations platform and a quote-to-production system for a U.S. manufacturer.",
+      "Redesigned and launched 8 production websites (Next.js, Astro, Vite) on AWS S3/CloudFront and Vercel, with bilingual i18n, SEO structured data, CSP hardening and WCAG AA audits at zero axe violations.",
+      "Built integrations and automation: a 53-node n8n content engine (fal.ai, Runway, ElevenLabs, Meta and Pinterest APIs), Stripe subscriptions and webhooks, Resend / AWS SES email, CFDI e-invoice parsing and a Claude-powered WhatsApp agent.",
+      "Run an AI-native engineering practice — Claude Code with sub-agent orchestration, Codex as independent reviewer, 25+ MCP integrations, spec-driven development and pre-commit security gates — with per-project AWS cost attribution and budget alarms.",
+    ],
+    stack: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "AWS CDK", "Vercel", "Stripe", "Expo", "Claude Code", "n8n"],
+  },
+  {
     company: "The Credit Pros",
     title: "IT Senior Director",
-    period: "March 2022 – Present",
+    period: "March 2022 – March 2026",
     location: "Remote — United States",
     summary:
-      "Lead enterprise IT strategy, software development, and operations for a U.S. consumer-credit company; manage AWS/Azure infrastructure, cybersecurity, and a portfolio of 5 vendor agencies with offshore development teams. C-level partner to the CTO driving AI-led transformation.",
+      "Led enterprise IT strategy, software development, and operations for a U.S. consumer-credit company; managed AWS/Azure infrastructure, cybersecurity, and a portfolio of 5 vendor agencies with offshore development teams. C-level partner to the CTO driving AI-led transformation.",
     achievements: [
       "Delivered 40% business growth and 25% workforce automation through strategic IT roadmap execution, cutting innovation project costs by 20%.",
       "Directed development of AI-driven applications and internal platforms — integrating LLM/Claude-based automation and data analytics within a PCI-compliant credit-card transactional environment to optimize operations and reduce manual processing.",
@@ -264,44 +287,150 @@ export const experience: readonly Role[] = [
 
 export const projects: readonly Project[] = [
   {
-    name: "AI Document-Intelligence Platform",
+    name: "DENTALISTA",
     blurb:
-      "An end-to-end system that turns field photographs into validated database records, with a human in the loop before anything is written.",
+      "Multi-tenant SaaS for dental clinics: schedule by dentist and chair, clinical record with odontogram, treatment plans, billing and patient balances — each clinic on its own subdomain.",
     highlights: [
-      "Architected on AWS (S3, Lambda) with the Claude API and Supabase",
-      "Ingests field photos, extracts structured data, writes validated records",
-      "Eliminates manual data entry behind a human-in-the-loop review layer",
+      "PostgreSQL row-level security per clinic, infrastructure as code with AWS CDK",
+      "Stripe subscription billing, e-signed consents and six clinical PDF formats",
+      "400+ commits and 76 schema migrations; built for Mexican data-privacy law (LFPDPPP)",
     ],
-    stack: ["AWS S3", "AWS Lambda", "Claude API", "Supabase"],
+    stack: ["Next.js", "Drizzle", "PostgreSQL RLS", "AWS CDK", "Stripe", "Cloudflare"],
+    status: "In production",
+    url: "https://dentalista.app",
   },
   {
-    name: "Modular Workforce-Operations Platform",
+    name: "GuardTrack",
     blurb:
-      "A multi-tenant operations platform where attendance, payroll logic and profitability are one system rather than three spreadsheets.",
+      "Guard-patrol platform for security companies: a guard cannot mark a checkpoint without being there, and the client sees the proof.",
     highlights: [
-      "Modular multi-tenant architecture with role-based access",
-      "Attendance capture, payroll and bonus logic, KPI dashboards",
-      "Real-time profitability reporting",
+      "Android app scans a signed QR, takes a photo and records GPS at every checkpoint",
+      "Web console, client portal, alerts and scheduled email reports",
+      "240 commits and 26 edge functions in 18 days, with pgTAP tests for tenant isolation",
     ],
-    stack: ["Next.js", "React Native", "Supabase", "Turso"],
+    stack: ["Expo / React Native", "Next.js", "Supabase", "PostgreSQL RLS", "Resend"],
+    status: "In production",
+    url: "https://guardtrack.grupoalista.com",
   },
   {
-    name: "Cloud Web Platforms & Automation",
+    name: "Workforce-Operations Platform",
     blurb:
-      "Production web platforms and the integration plumbing that connects LLMs to the systems a business actually runs on.",
+      "Attendance, payroll, payouts, uniforms and ISO 9001 for a private security firm — one system instead of a dozen spreadsheets.",
     highlights: [
-      "Deployed on AWS (S3, CloudFront, Route 53) and Vercel with GitHub CI/CD",
-      "Integration and automation workflows built in n8n and Zapier",
-      "Claude API wired into business systems",
+      "Runs 380+ guards across 100+ client accounts",
+      "Payroll rules for bonuses, food vouchers and severance; Excel import and export",
+      "Single sign-on hand-off into GuardTrack; 420 commits since May 2026",
     ],
-    stack: ["AWS CloudFront", "Route 53", "Vercel", "GitHub Actions", "n8n", "Zapier"],
+    stack: ["Next.js", "Drizzle", "PostgreSQL", "AWS Amplify", "Amazon S3"],
+    status: "In production",
+  },
+  {
+    name: "CRMs & Back-Office Systems",
+    blurb:
+      "The operational core of small and mid-size businesses: pipeline, quotes, invoicing and reconciliation.",
+    highlights: [
+      "AI-assisted consulting back office: versioned quotes, CFDI e-invoice ingestion, bank reconciliation",
+      "Desktop sales CRM (Windows and macOS) with a 25-stage pipeline and margin calculation",
+      "Customs-operations platform and a quote-to-production system for a U.S. manufacturer",
+    ],
+    stack: ["Next.js", "Prisma", "Electron", "SQLite", "Claude API", "Neon"],
+    status: "Delivered",
+  },
+  {
+    name: "Web Platforms",
+    blurb:
+      "Eight production websites redesigned or launched for a dental SaaS, an import group, an industrial supplier, a U.S. manufacturer and a fashion boutique.",
+    highlights: [
+      "Static-first builds on AWS S3 + CloudFront and Vercel, behind a CDN from day one",
+      "Bilingual i18n, SEO structured data, CSP and consent banners",
+      "WCAG AA audited with axe at zero violations",
+    ],
+    stack: ["Next.js", "Astro", "Vite", "Tailwind", "CloudFront", "Vercel"],
+    status: "In production",
+  },
+  {
+    name: "Automation & Integrations",
+    blurb:
+      "The plumbing that connects LLMs and SaaS APIs to the systems a business actually runs on.",
+    highlights: [
+      "53-node n8n content engine: fal.ai, Runway and ElevenLabs generation, Meta and Pinterest publishing",
+      "Stripe subscriptions and webhooks, Resend and AWS SES email, CFDI e-invoice parsing",
+      "Claude-powered WhatsApp agent on the Meta Cloud API, built and pending launch",
+    ],
+    stack: ["n8n", "Stripe", "Claude API", "WhatsApp Cloud API", "Resend", "FastAPI"],
+    status: "In production",
   },
 ];
+
+/** How the work above gets built. Each item is a rule actually enforced, not a tool list. */
+export const aiPractice: readonly PracticeItem[] = [
+  {
+    title: "Agents, not autocomplete",
+    detail:
+      "Claude Code as the daily engineering agent, with parallel sub-agents for exploration, review and fan-out work across repositories.",
+  },
+  {
+    title: "A second model reviews every commit",
+    detail:
+      "Pre-commit gate: static security scan, code review, an independent Codex review, then a security review before anything is pushed.",
+  },
+  {
+    title: "Spec before code",
+    detail:
+      "Spec-driven development (GitHub spec-kit), written plans and test-driven implementation for any change of three steps or more.",
+  },
+  {
+    title: "25+ MCP integrations",
+    detail:
+      "Vercel, Supabase, GitHub, Playwright, AWS IaC and pricing, Notion and more — the agent works against real systems, not copies of them.",
+  },
+  {
+    title: "Memory that outlives the session",
+    detail:
+      "Every project keeps an append-only decision log in an Obsidian vault, so the next session starts where the last one ended.",
+  },
+  {
+    title: "Cloud cost as a design input",
+    detail:
+      "No high availability before revenue, CDN in front of every origin, per-project cost tags and budget alarms from day one.",
+  },
+];
+
+export const careerReel: CareerReel = {
+  src: "/career-reel.mp4",
+  poster: "/career-reel.jpg",
+  duration: "1:46",
+  caption:
+    "Education, the five organizations behind 25 years of IT leadership, the results, what I do today as a fractional CTO, and the platforms I have shipped since April 2026.",
+  transcript: [
+    "25+ years leading technology. From Fortune 500 operations to shipping AI-built platforms.",
+    "Alvaro Garcia — IT & Engineering Executive, Fractional CTO. Guadalajara, Mexico; English and Spanish; open to remote work worldwide.",
+    "Education: ITESO, Bachelor of Science in Computer Science & IT. ITESM, Leadership & Management Diploma. Certifications: ITIL v4, AWS, PCI DSS, SOC 2, SOX Audit, Six Sigma / Lean, PMP methodologies, AI Integration & Data Visualization.",
+    "Hewlett-Packard, 2001–2014: Service Operations Manager and SAP FI Consultant. 50% fewer month-end-close incidents; a dashboard adopted as the worldwide standard; SAP FI support moved from the US to Mexico with zero SOX findings.",
+    "Morgan Stanley, 2015–2020: IT DevOps Manager, Enterprise Network Services. 300+ people, follow-the-sun; 100% SLA/KPI compliance within 90 days; multimillion-dollar budget and vendor contracts.",
+    "Clip, 2020–2021: Director of IT Operations at a payments fintech. 20% IT budget reduction; ITIL operations strategy; cloud migration of all internal tools; every department aligned in 6 months.",
+    "Rackspace, 2021–2022: Engagement Manager across AWS, GCP and Azure. 10–15 enterprise accounts at once; cost optimization, Agile delivery and escalation management.",
+    "The Credit Pros, 2022–2026: IT Senior Director and C-level partner to the CTO. 40% business growth and 25% workforce automation; full IT P&L, 5 vendor agencies, PCI DSS / SOC 2, AI-led transformation.",
+    "Results: 40% business growth; 25% workforce automation; 50% better DevOps delivery; 100% SLA compliance in 90 days; 300+ people led worldwide; multimillion-dollar P&L ownership.",
+    "Strategy & leadership: Fractional CTO; IT strategy design and execution; P&L and budget management; business needs translated into technology results; communication across departments.",
+    "Operations & engineering: ITIL v4 service operations; engineering delivery with SDLC, DevOps and SRE; global multidisciplinary teams in engineering, innovation, project management and operations; tools rolled out for Sales and Support.",
+    "Dashboards & automation: C-level executive dashboards; workflow automation with n8n and Zapier; API and third-party integrations; sales and customer-support workflows; AI / LLM integration.",
+    "Today, since April 2026: Fractional CTO & Technology Consultant at Grupo Alista, designing and shipping the platforms myself — for clients and for the group.",
+    "DENTALISTA: a live multi-tenant SaaS for dental clinics — scheduling, clinical records, odontogram and billing. 400+ commits, Stripe billing, AWS and PostgreSQL.",
+    "GuardTrack, for SESPO: guard-patrol tracking where every checkpoint is proven with a signed QR, a photo and GPS. Android app and web console, shipped in 18 days.",
+    "SESPO / Mega Seguridad: an attendance, payroll and ISO 9001 platform for security-guard operations across multiple legal entities — 380+ guards.",
+    "SackDesk: a desktop sales CRM for an industrial-bag distributor, with a 25-stage pipeline, quotes as PDF and 12 pivot reports.",
+    "Grupo 414: a foreign-trade operations platform with 22 legal templates, a customs-document parser and an FX & freight dashboard. Quoting systems: a multi-tenant quoting SaaS on AWS, and a pricing engine with branded PDFs for a U.S. manufacturer.",
+    "Also delivered through Grupo Alista: Alista System, a back office for quotes, CFDI e-invoicing, bank reconciliation and AI receipt reading; JobHunt AI, a daily job-portal sweep where an LLM tailors an ATS-clean résumé per opening; and MichiBots, an AI-produced animated kids' series built on Runway, ElevenLabs and an FFmpeg pipeline.",
+    "Toolkit: Claude Code, Codex, Claude API, n8n, Zapier, Next.js, React, React Native, TypeScript, Python, PostgreSQL, Supabase, AWS, Azure, GCP, Vercel, Cloudflare, Stripe, WhatsApp API, SAP FICO, Splunk, Jira and Confluence, Monday.com, ITIL v4.",
+    "Alvaro Garcia — IT & Engineering Executive, Fractional CTO. Turning business needs into technology results. alvarogarcia.space · linkedin.com/in/algarmat",
+  ],
+};
 
 export const credentials: Credentials = {
   education: [
     {
-      credential: "B.S. in Computer Science & Information Technology",
+      credential: "Bachelor of Science in Computer Science & Information Technology",
       institution: "Instituto Tecnológico y de Estudios Superiores de Occidente (ITESO)",
     },
     {
@@ -357,26 +486,59 @@ export const skills: readonly SkillGroup[] = [
     ],
   },
   {
+    group: "AI-native engineering",
+    items: [
+      "Agentic Software Development (Claude Code, Codex)",
+      "Multi-Agent Orchestration & Sub-Agent Workflows",
+      "Spec-Driven & Test-Driven Development",
+      "MCP Integrations",
+      "AI Code & Security Review Gates",
+      "Prompt & Context Engineering",
+    ],
+  },
+  {
     group: "Technical",
     items: [
-      "AI / LLM Integration (Claude API)",
+      "Claude Code",
+      "Codex",
+      "Claude API",
+      "Gemini API",
+      "MCP",
+      "TypeScript",
+      "Python",
+      "SQL",
       "Next.js",
       "React",
-      "React Native",
-      "Python",
+      "React Native / Expo",
+      "Astro",
+      "Vite",
+      "Tailwind CSS",
+      "Electron",
+      "Node.js",
+      "FastAPI",
+      "Drizzle ORM",
+      "Prisma",
+      "PostgreSQL",
       "Supabase",
-      "Turso",
+      "Neon",
+      "Turso / SQLite",
+      "AWS (CDK, RDS, S3, CloudFront, Lambda, Amplify, SES)",
+      "Azure",
+      "GCP",
       "Vercel",
-      "GitHub",
+      "Cloudflare",
+      "Docker",
+      "GitHub Actions",
+      "Stripe",
+      "WhatsApp Cloud API",
+      "Resend",
       "n8n",
       "Zapier",
-      "AWS / Azure / GCP",
+      "Playwright",
+      "Vitest",
       "SAP FICO",
       "Splunk",
       "Atlassian (Jira, Confluence)",
-      "Azure Copilot",
-      "Monday.com",
-      "CRM & ITSM Tools",
     ],
   },
 ];

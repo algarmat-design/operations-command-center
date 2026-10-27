@@ -4,13 +4,24 @@ import { RoleFit } from "@/components/home/role-fit";
 import { DashboardCards } from "@/components/home/dashboard-cards";
 import { CareerList, SelectedProjects } from "@/components/home/career-list";
 import { ContactCta } from "@/components/home/contact-cta";
+import { AiPractice } from "@/components/home/ai-practice";
+import { CareerReel } from "@/components/home/career-reel";
 import { Section } from "@/components/ui/primitives";
+import { careerReel } from "@/content/profile";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
       <ProofStrip />
+
+      <Section
+        id="reel"
+        eyebrow={`Career reel · ${careerReel.duration}`}
+        title="Twenty-five years of IT leadership, then the hands-on part"
+      >
+        <CareerReel />
+      </Section>
 
       <Section
         id="capabilities"
@@ -42,17 +53,26 @@ export default function HomePage() {
       <Section
         id="projects"
         eyebrow="Hands-on"
-        title="Selected technical projects"
-        lede="Systems I architected and shipped myself, not ones I approved a budget for."
+        title="Systems I've shipped since April 2026"
+        lede="Architected and built myself in my current fractional CTO role — not ones I approved a budget for. Client companies are described rather than named."
       >
         <SelectedProjects />
       </Section>
 
       <Section
+        id="ai-native"
+        eyebrow="How it gets built"
+        title="An AI-native engineering practice, with the guardrails written down"
+        lede="One senior engineer shipping at team speed is a process, not a trick. These are the rules it runs on."
+      >
+        <AiPractice />
+      </Section>
+
+      <Section
         id="experience"
         eyebrow="Career"
-        title="25+ years, five organizations"
-        lede="Fortune 500 enterprise, high-growth fintech, and a 13-year run through problem management, SAP FI consulting and global operations that taught me what an audit actually costs."
+        title="25+ years, six organizations"
+        lede="A fractional CTO role building production systems, Fortune 500 enterprise, high-growth fintech, and a 13-year run through problem management, SAP FI consulting and global operations that taught me what an audit actually costs."
       >
         <CareerList />
       </Section>

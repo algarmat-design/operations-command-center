@@ -78,7 +78,7 @@ try {
     path: OUT,
     format: "A4",
     printBackground: true,
-    margin: { top: "14mm", right: "14mm", bottom: "16mm", left: "14mm" },
+    margin: { top: "12mm", right: "13mm", bottom: "12mm", left: "13mm" },
     preferCSSPageSize: false,
   });
 

@@ -49,13 +49,13 @@ export function CareerList() {
   );
 }
 
-/** Hands-on build work, transcribed from the resume's technical projects. */
+/** Systems shipped hands-on, each with its production status and, when public, its URL. */
 export function SelectedProjects() {
   return (
-    <ul className="grid gap-4 lg:grid-cols-3">
-      {projects.map((p, i) => (
+    <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {projects.map((p) => (
         <Card as="li" key={p.name} className="flex flex-col gap-4">
-          <Eyebrow>{`Project 0${i + 1}`}</Eyebrow>
+          <Eyebrow>{p.status}</Eyebrow>
           <h3 className="text-lg leading-snug text-text">{p.name}</h3>
           <p className="text-sm leading-relaxed text-text-muted">{p.blurb}</p>
 
@@ -75,6 +75,13 @@ export function SelectedProjects() {
               </li>
             ))}
           </ul>
+
+          {p.url ? (
+            <a href={p.url} className="num text-xs text-link" target="_blank" rel="noopener noreferrer">
+              {p.url.replace("https://", "")}
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          ) : null}
         </Card>
       ))}
     </ul>

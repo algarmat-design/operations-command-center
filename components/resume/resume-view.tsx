@@ -1,4 +1,4 @@
-import { credentials, experience, identity, positioning, projects, skills } from "@/content/profile";
+import { credentials, experience, identity, positioning, skills } from "@/content/profile";
 
 /**
  * One resume renderer, two presentations.
@@ -9,8 +9,10 @@ import { credentials, experience, identity, positioning, projects, skills } from
  * the same content module.
  */
 export function ResumeView({ print = false }: { print?: boolean }) {
+  // Applicant-tracking parsers trip on typographic dashes; paper gets ASCII, the web keeps typography.
+  const t = (text: string) => (print ? text.replace(/[\u2013\u2014]/g, "-") : text);
   return (
-    <article className={print ? "resume-print flex flex-col gap-6" : "flex flex-col gap-10"}>
+    <article className={print ? "resume-print flex flex-col gap-4" : "flex flex-col gap-10"}>
       <header className="flex flex-col gap-3">
         <h1 className={print ? "text-3xl leading-tight" : "text-[clamp(2rem,5vw,3rem)] leading-tight"}>
           {identity.name}
@@ -38,37 +40,39 @@ export function ResumeView({ print = false }: { print?: boolean }) {
         <p className="num text-xs text-text-muted">{credentials.languages.join(" | ")}</p>
       </header>
 
-      <ResumeSection title="Professional summary" print={print}>
-        <p className="max-w-[80ch] text-sm leading-relaxed text-text-muted">{positioning.summary}</p>
+      <ResumeSection title="Professional Summary" print={print}>
+        <p className="max-w-[80ch] text-sm leading-relaxed text-text-muted">{t(positioning.summary)}</p>
       </ResumeSection>
 
-      <ResumeSection title="Core competencies" print={print}>
+      <ResumeSection title="Core Competencies" print={print}>
         <p className="max-w-[85ch] text-sm leading-relaxed text-text-muted">
           {/* Technical tools have their own line further down; repeating them
               here is what makes a competencies block read as padding. */}
-          {skills
-            .filter((g) => g.group !== "Technical")
-            .flatMap((g) => g.items)
-            .join(" · ")}
+          {t(
+            skills
+              .filter((g) => g.group !== "Technical")
+              .flatMap((g) => g.items)
+              .join(" · "),
+          )}
         </p>
       </ResumeSection>
 
-      <ResumeSection title="Professional experience" print={print}>
+      <ResumeSection title="Professional Experience" print={print}>
         <ol className="flex flex-col gap-6">
           {experience.map((role) => (
-            <li key={`${role.company}-${role.period}`} className="resume-block flex flex-col gap-2">
+            <li key={`${role.company}-${role.period}`} className="resume-role flex flex-col gap-2">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <h3 className="text-base leading-snug text-text">
-                  {role.title} — {role.company}
+                  {role.title} {print ? "-" : "—"} {role.company}
                 </h3>
-                <p className="num text-xs text-text-muted">{role.period}</p>
+                <p className="num text-xs text-text-muted">{t(role.period)}</p>
               </div>
-              <p className="max-w-[85ch] text-sm leading-relaxed text-text-muted">{role.summary}</p>
+              <p className="max-w-[85ch] text-sm leading-relaxed text-text-muted">{t(role.summary)}</p>
               <ul className="flex flex-col gap-1.5">
                 {role.achievements.map((a) => (
                   <li key={a} className="flex gap-2.5 text-sm leading-relaxed text-text-muted">
                     <span aria-hidden="true" className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-accent" />
-                    <span className="max-w-[80ch]">{a}</span>
+                    <span className="max-w-[80ch]">{t(a)}</span>
                   </li>
                 ))}
               </ul>
@@ -77,42 +81,31 @@ export function ResumeView({ print = false }: { print?: boolean }) {
         </ol>
       </ResumeSection>
 
-      <ResumeSection title="Selected technical projects" print={print}>
-        <ul className="flex flex-col gap-4">
-          {projects.map((p) => (
-            <li key={p.name} className="resume-block flex flex-col gap-1.5">
-              <h3 className="text-sm font-semibold text-text">{p.name}</h3>
-              <p className="max-w-[85ch] text-sm leading-relaxed text-text-muted">
-                {p.highlights.join(". ")}.
-              </p>
-            </li>
-          ))}
-        </ul>
+      {/* Projects are not repeated here: the current role already carries
+          each system with its numbers, and the resume has a two-page budget. */}
+      <ResumeSection title="Technical Skills" print={print}>
+        <p className="max-w-[85ch] text-sm leading-relaxed text-text-muted">
+          {skills.find((g) => g.group === "Technical")?.items.join(" | ")}
+        </p>
       </ResumeSection>
 
-      <div className={print ? "flex flex-col gap-6" : "grid gap-10 md:grid-cols-2"}>
+      <div className={print ? "flex flex-col gap-4" : "grid gap-10 md:grid-cols-2"}>
         <ResumeSection title="Education" print={print}>
-          <ul className="flex flex-col gap-3">
+          <ul className={print ? "flex flex-col gap-1" : "flex flex-col gap-3"}>
             {credentials.education.map((e) => (
-              <li key={e.credential} className="resume-block flex flex-col gap-0.5">
+              <li key={e.credential} className={`resume-block flex gap-x-2 gap-y-0.5 ${print ? "flex-row flex-wrap" : "flex-col"}`}>
                 <p className="text-sm font-semibold text-text">{e.credential}</p>
+                {print && <p className="text-sm text-text-muted" aria-hidden="true">-</p>}
                 <p className="text-sm text-text-muted">{e.institution}</p>
               </li>
             ))}
           </ul>
         </ResumeSection>
 
-        <ResumeSection title="Certifications & tools" print={print}>
-          <div className="flex flex-col gap-3">
-            <p className="max-w-[80ch] text-sm leading-relaxed text-text-muted">
-              <span className="font-semibold text-text">Certifications: </span>
-              {credentials.certifications.join(" | ")}
-            </p>
-            <p className="max-w-[80ch] text-sm leading-relaxed text-text-muted">
-              <span className="font-semibold text-text">Technical: </span>
-              {skills.find((g) => g.group === "Technical")?.items.join(" | ")}
-            </p>
-          </div>
+        <ResumeSection title="Certifications" print={print}>
+          <p className="max-w-[80ch] text-sm leading-relaxed text-text-muted">
+            {credentials.certifications.join(" | ")}
+          </p>
         </ResumeSection>
       </div>
     </article>
